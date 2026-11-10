@@ -21,11 +21,32 @@ Runs entirely in the visitor's browser.
   IT project datasets: Bug Tracker (40), Sprint Tasks (36), Project Budget & Costs (30).
   Most exercises work on every dataset; where a dataset lacks a column, the page says
   so and points back to the course dataset.
+- **See the dataset first** — the datasets come before the practice area, so you see
+  the columns and the first rows before typing a formula.
+- **Task row** — every practice task shows the exact data row it is about, from the
+  dataset you have open. Switch datasets and the task row, the solution and the
+  answer all follow the new data.
+- **Big files, paged** — the table shows 50 rows at a time with Previous / Next, so a
+  477-row upload is fully browsable. Formulas and practice always use every row.
+- **Download any dataset** — the "Download CSV" button above the table saves the open
+  dataset (built-in or uploaded) as a CSV file, for practice in real Excel.
 - **Upload their own data** — CSV file or pasted CSV text. First row = headers. The file
   is read in the browser only; nothing is uploaded anywhere.
 - **See the slides** — the 48-slide course deck embedded on the page, with links to the
   GitHub repo (workbook, slides, guide, all 42 demo videos) and the YouTube channel.
 - No Drive link anywhere on the page, by design.
+
+## How to use (for learners)
+
+1. **Pick a formula** (section 1) — search or filter by category, click a card.
+2. **Look at the dataset** (section 2) — the columns, the column letters, and how many
+   rows it has. Switch datasets with the tabs; upload your own CSV if you want.
+3. **Watch the demo** (section 3) — the video is at the top of the practice area.
+4. **Read the task** — it shows the exact data row the task is about ("Task row").
+5. **Type your formula** in the box and press **Check answer**. Wrong? Read the error,
+   then press **Show solution** to see the model formula for the dataset you have open.
+6. **Try another dataset** — same formula, new data, new answer. Download any dataset
+   as CSV to practise the same formulas in real Excel.
 
 ## Files
 

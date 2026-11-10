@@ -31,7 +31,7 @@ const EXERCISES = {
  10:{q:'Average VarianceHrs of tasks with the same Status and Project as the first task?', model:'=AVERAGEIFS({VarianceHrs}2:{VarianceHrs}{N},{Status}2:{Status}{N},{Status}2,{Project}2:{Project}{N},{Project}2)', need:['VarianceHrs','Status','Project']},
  11:{q:'Row 2: show "Over" if ActualHrs is more than PlannedHrs, else "OK".', model:'=IF({ActualHrs}2>{PlannedHrs}2,"Over","OK")', need:['ActualHrs','PlannedHrs']},
  12:{q:'Row 2: if %Complete is 1 show "Done", if 0.5 or more show "Half", otherwise "Start".', model:'=IFS({%Complete}2=1,"Done",{%Complete}2>=0.5,"Half",TRUE,"Start")', need:['%Complete']},
- 13:{q:'Row 3: show "ESCALATE" if the task is Delayed AND Critical, else "OK".', model:'=IF(AND({Status}3="Delayed",{Priority}3="Critical"),"ESCALATE","OK")', need:['Status','Priority']},
+ 13:{q:'Row 3: show "ESCALATE" if the task is Delayed AND Critical, else "OK".', model:'=IF(AND({Status}3="Delayed",{Priority}3="Critical"),"ESCALATE","OK")', row:3, need:['Status','Priority']},
  14:{q:'Owner of "IT-999" (does not exist) — show "Not Found" instead of an error.', model:'=IFERROR(XLOOKUP("IT-999",{WorkID}2:{WorkID}{N},{Owner}2:{Owner}{N}),"Not Found")', need:['WorkID','Owner']},
  15:{q:'Show the DueDate of row 2 as month-year, like "May-2025".', model:'=TEXT({DueDate}2,"mmm-yyyy")', need:['DueDate']},
  16:{q:'Join the WorkID and Project of row 2 with " - " between them.', model:'=CONCAT({WorkID}2," - ",{Project}2)', need:['WorkID','Project']},
@@ -51,7 +51,7 @@ const EXERCISES = {
  30:{q:'How many rows have Status typed as "done" (lowercase — validation blocks this)?', model:'=COUNTIF({Status}2:{Status}{N},"done")', need:['Status']},
  31:{q:'How many rows would be highlighted red (Delayed)?', model:'=COUNTIF({Status}2:{Status}{N},"Delayed")', need:['Status']},
  32:{q:'After refresh, how many data rows are there?', model:'=COUNTA({ID}2:{ID}{N})', need:[]},
- 33:{q:'Row 3: is it overdue today? Show "Overdue" if DueDate is before today, else "On track".', model:'=IF({DueDate}3<TODAY(),"Overdue","On track")', need:['DueDate']},
+ 33:{q:'Row 3: is it overdue today? Show "Overdue" if DueDate is before today, else "On track".', model:'=IF({DueDate}3<TODAY(),"Overdue","On track")', row:3, need:['DueDate']},
  34:{q:'Next working day after the DueDate in row 2?', model:'=WORKDAY({DueDate}2,1)', need:['DueDate']},
  35:{q:'One month after the DueDate in row 2?', model:'=EDATE({DueDate}2,1)', need:['DueDate']},
  36:{q:'Days between StartDate and DueDate in row 2?', model:'=DATEDIF({StartDate}2,{DueDate}2,"d")', need:['StartDate','DueDate']},
@@ -146,6 +146,59 @@ function missingHeaders(need, ds){
   return (need||[]).filter(h => !map[h]);
 }
 
+/* ---------------- task row + paging + download (v2) ---------------- */
+const PAGE_SIZE = 50;
+let dsPage = 0;
+function realHeader(h, ds){
+  if (ds.headers.includes(h)) return h;
+  if (h === 'WorkID' || h === 'ID') return ds.headers[0];
+  const fb = {Owner:'AssignedTo', Priority:'Severity', Module:'Category', StartDate:'ReportedDate'};
+  return fb[h] || null;
+}
+function isRowTask(model){
+  return /\{ID1\}/.test(model) || /\{[A-Za-z%]+\}[23](?![0-9:])/.test(model);
+}
+function taskRowHTML(ex, ds){
+  const n = ex.row || 2;
+  const row = ds.rows[n - 2];
+  if (!row) return '';
+  const cols = ['ID', ...(ex.need || [])]
+    .map(h => realHeader(h, ds))
+    .filter((h, i, a) => h && a.indexOf(h) === i);
+  const cells = cols.map(h => {
+    const i = ds.headers.indexOf(h);
+    return {letter: colLetter(i), header: h, value: row[i]};
+  });
+  const caption = isRowTask(ex.model)
+    ? 'This is the row your task is about.'
+    : 'First row of the dataset — this task works across all rows.';
+  return `<div class="task-row"><b>Task row — row ${n} of the ${esc(ds.title)} dataset</b>
+    <span class="muted small"> ${esc(caption)}</span>
+    <table class="mini"><thead><tr>${cells.map(c => `<th><span class="col-letter">Column ${c.letter}</span>${esc(c.header)}</th>`).join('')}</tr></thead>
+    <tbody><tr>${cells.map(c => `<td>${c.value === null || c.value === undefined || c.value === '' ? '(blank)' : esc(c.value)}</td>`).join('')}</tr></tbody></table></div>`;
+}
+function toCSV(ds){
+  const q = v => {
+    if (v === null || v === undefined) return '';
+    const s = String(v);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const lines = [ds.headers.map(q).join(',')];
+  for (const r of ds.rows) lines.push(r.map(q).join(','));
+  return lines.join('\n');
+}
+function downloadDataset(){
+  const ds = activeDs;
+  const blob = new Blob([toCSV(ds)], {type: 'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (ds.id && ds.id !== 'custom'
+    ? ds.id
+    : ds.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 /* ---------------- formula browser ---------------- */
 function renderCats(){
   const cats = ['All', ...new Set(FORMULAS.map(f => f.cat))];
@@ -208,6 +261,7 @@ function renderDetail(){
     <div class="practice">
       <h3>✍️ Your turn — practise on the ${esc(activeDs.title)} dataset</h3>
       <div class="task"><b>Task:</b> ${esc(ex.q)}</div>
+      ${taskRowHTML(ex, activeDs)}
       ${missing.length
         ? `<div class="feedback neutral show">This exercise needs the column${missing.length>1?'s':''} <b>${missing.map(esc).join(', ')}</b>, which the current dataset does not have. Switch to the <b>IT Project Data</b> dataset above to practise it — the demo and explanation still work.</div>`
         : ''}
@@ -219,7 +273,7 @@ function renderDetail(){
       <div id="feedback" class="feedback"></div>
       <div id="solution" class="solution"><b>Solution (for the ${esc(activeDs.title)} dataset):</b><code id="solCode"></code>
         <p class="muted small">Column letters change with the dataset — this solution is built for the one you have open now.</p></div>
-      <p class="muted small">Tip: the table in section 3 shows the column letters. Data starts at row 2; the last row is ${activeDs.rows.length + 1}. Dates work as real dates — e.g. MONTH of a DueDate cell.</p>
+      <p class="muted small">Tip: the table in section 2 shows the column letters. Data starts at row 2; the last row is ${activeDs.rows.length + 1}. Dates work as real dates — e.g. MONTH of a DueDate cell.</p>
     </div>`;
   $('#checkBtn').addEventListener('click', checkAnswer);
   $('#solBtn').addEventListener('click', () => {
@@ -274,6 +328,7 @@ function renderDsTabs(){
   document.querySelectorAll('.ds-tab').forEach(t =>
     t.addEventListener('click', () => {
       activeDs = DATASETS.find(d => d.id === t.dataset.id);
+      dsPage = 0;
       renderDsTabs(); renderTable();
       if (activeFormula) renderDetail();
     }));
@@ -281,9 +336,14 @@ function renderDsTabs(){
 function renderTable(){
   const ds = activeDs;
   $('#dsTitle').textContent = ds.title;
-  $('#dsMeta').textContent = ds.desc + ` — ${ds.rows.length} rows.`;
-  const CAP = 150;
-  const shown = ds.rows.slice(0, CAP);
+  const total = ds.rows.length;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (dsPage >= pages) dsPage = pages - 1;
+  if (dsPage < 0) dsPage = 0;
+  const start = dsPage * PAGE_SIZE;
+  const end = Math.min(total, start + PAGE_SIZE);
+  const shown = ds.rows.slice(start, end);
+  $('#dsMeta').textContent = ds.desc + ` — ${total} rows · Showing rows ${total ? start + 1 : 0}–${end} of ${total}. Formulas and practice always use all ${total} rows.`;
   let html = '<thead><tr>' + ds.headers.map((h,i) =>
     `<th><span class="col-letter">Column ${colLetter(i)}</span>${esc(h)}</th>`).join('') + '</tr></thead><tbody>';
   for (const row of shown){
@@ -294,9 +354,14 @@ function renderTable(){
   }
   html += '</tbody>';
   $('#dataTable').innerHTML = html;
-  if (ds.rows.length > CAP){
-    $('#dsMeta').textContent += ` Showing first ${CAP} rows in the table — formulas still use all ${ds.rows.length} rows.`;
-  }
+  $('#pager').innerHTML = pages > 1
+    ? `<button class="btn btn-outline" id="pgPrev" type="button" ${dsPage === 0 ? 'disabled' : ''}>← Previous</button>
+       <span class="muted">Page ${dsPage + 1} of ${pages}</span>
+       <button class="btn btn-outline" id="pgNext" type="button" ${dsPage === pages - 1 ? 'disabled' : ''}>Next →</button>`
+    : `<span class="muted">All ${total} rows on one page</span>`;
+  const prev = $('#pgPrev'), next = $('#pgNext');
+  if (prev) prev.addEventListener('click', () => { dsPage--; renderTable(); });
+  if (next) next.addEventListener('click', () => { dsPage++; renderTable(); });
 }
 
 /* ---------------- upload own dataset ---------------- */
@@ -329,6 +394,7 @@ function loadCustomDataset(rows, name){
   const ds = { id:'custom', title: name || 'My dataset', desc:'Uploaded by you — read in your browser only.', headers, rows: data, custom:true };
   DATASETS.push(ds);
   activeDs = ds;
+  dsPage = 0;
   renderDsTabs(); renderTable();
   if (activeFormula) renderDetail();
   document.getElementById('datasets').scrollIntoView({behavior:'smooth'});
@@ -361,6 +427,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
   renderCats(); renderGrid(); renderDsTabs(); renderTable(); initUpload();
+  $('#dlBtn').addEventListener('click', downloadDataset);
   $('#search').addEventListener('input', e => { searchQ = e.target.value.trim().toLowerCase(); renderGrid(); });
   selectFormula(1, false); // start with XLOOKUP
 });

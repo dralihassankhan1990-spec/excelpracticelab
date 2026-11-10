@@ -65,22 +65,9 @@
     <div id="formulaGrid" class="formula-grid"></div>
   </section>
 
-  <!-- PRACTICE AREA : demo on top, then formula, then practice -->
-  <section id="practice" class="section">
-    <h2>2 · Watch, read, practise</h2>
-    <p class="section-sub">Select a formula above. Its demo video comes first, then the formula explained, then your turn.</p>
-
-    <div id="detail" class="detail glass">
-      <div class="detail-empty">
-        <p class="big">👆 Choose a formula to begin</p>
-        <p>Try <b>XLOOKUP</b> first — it is the most-used lookup in daily project work.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- DATASETS -->
   <section id="datasets" class="section">
-    <h2>3 · The datasets</h2>
+    <h2>2 · The datasets</h2>
     <p class="section-sub">The same data as the course workbook — plus three more IT project datasets.
     Every formula works on the dataset you pick here. Column letters are shown so you can write real Excel references
     (A2, B2:B121 …). Header row is row 1, data starts at row 2.</p>
@@ -107,9 +94,25 @@
     <div class="table-wrap glass">
       <div class="table-head">
         <b id="dsTitle"></b><span id="dsMeta"></span>
+        <button id="dlBtn" class="btn btn-outline" type="button">⬇ Download CSV</button>
       </div>
       <div class="table-scroll">
         <table id="dataTable"></table>
+      </div>
+      <div id="pager" class="pager"></div>
+    </div>
+  </section>
+
+  <!-- PRACTICE AREA : demo on top, then formula, then practice -->
+  <section id="practice" class="section">
+    <h2>3 · Watch, read, practise</h2>
+    <p class="section-sub">The dataset is in section 2 above — look at it first, so you know the columns and the
+    task row. Then select a formula: its demo video comes first, then the formula explained, then your turn.</p>
+
+    <div id="detail" class="detail glass">
+      <div class="detail-empty">
+        <p class="big">👆 Choose a formula to begin</p>
+        <p>Try <b>XLOOKUP</b> first — it is the most-used lookup in daily project work.</p>
       </div>
     </div>
   </section>
@@ -135,10 +138,11 @@
         <h3>How to practise</h3>
         <ol class="howto">
           <li>Pick a formula and watch its demo.</li>
-          <li>Read the syntax and the example.</li>
+          <li>Look at the dataset (section 2) — note the column letters and the task row.</li>
           <li>Type the formula in the practice box — use the column letters from the table.</li>
           <li>Press <b>Check answer</b>. Wrong? Read the error, then press <b>Show solution</b>.</li>
-          <li>Switch datasets and try the same formula again.</li>
+          <li>Switch datasets and try the same formula again — the task row and the answer change with the data.</li>
+          <li>Big file? The table shows 50 rows at a time — use Previous / Next below it. Formulas always use every row. Download any dataset as CSV (button above the table) to practise in real Excel.</li>
         </ol>
       </div>
     </div>

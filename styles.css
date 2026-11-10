@@ -165,6 +165,15 @@ td.num, th.num{text-align:right; font-variant-numeric:tabular-nums}
 /* footer */
 footer{max-width:1180px; margin:26px auto 20px; width:calc(100% - 24px); padding:22px 26px; text-align:center}
 footer p{margin:.3rem 0}
+/* v2: task row box + pager */
+.task-row{background:rgba(212,175,55,.07); border:1px solid rgba(212,175,55,.35); border-radius:12px; padding:14px 16px; margin:10px 0 14px}
+.task-row b{color:var(--gold-soft)}
+.task-row table.mini{margin-top:10px; min-width:0; font-size:.9rem}
+.task-row table.mini th, .task-row table.mini td{white-space:normal}
+.task-row table.mini th{background:rgba(0,0,0,.3)}
+.pager{display:flex; gap:12px; align-items:center; justify-content:center; padding:14px 18px; border-top:1px solid var(--line-soft)}
+.pager .btn:disabled{opacity:.45; cursor:default}
+.table-head #dlBtn{margin-left:auto}
 @media (max-width:640px){
   .hero-glass{padding:26px 20px}
   .detail{padding:18px}
