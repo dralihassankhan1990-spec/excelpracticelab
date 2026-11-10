@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel Practice Lab — Excel for IT Project Management | Muhammad Bilal</title>
+<meta name="description" content="Practice all 42 Excel formulas on real IT project data. Watch the demo, read the formula, type it yourself and check your answer — free, in your browser.">
+<meta property="og:title" content="Excel Practice Lab — Excel for IT Project Management">
+<meta property="og:description" content="Practice all 42 Excel formulas on real IT project data. Watch the demo, type the formula, check your answer.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="glass nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <div class="brand-mark">Σ</div>
+      <div>
+        <div class="brand-name">Excel Practice Lab</div>
+        <div class="brand-sub">Soch &amp; Systems · Muhammad Bilal</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#formulas">Formulas</a>
+      <a href="#datasets">Datasets</a>
+      <a href="#practice">Practice</a>
+      <a href="#slides">Slides</a>
+      <a class="btn btn-gold" href="https://www.youtube.com/@SochAndSystems" target="_blank" rel="noopener">▶ YouTube</a>
+      <a class="btn btn-outline" href="https://github.com/dralihassankhan1990-spec/excel-for-IT-project-management" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glass glass">
+      <p class="eyebrow">Excel for IT Project Management · 42 Formula Demos</p>
+      <h1>Learn Excel by <span class="gold">doing</span>,<br>not by watching.</h1>
+      <p class="hero-text">Every formula from the course, on real IT project data. Pick a formula, watch its
+      2-minute demo, then type the formula yourself and get your answer checked — right here in your browser.
+      No sign-up. No install. Your data never leaves your computer.</p>
+      <div class="hero-actions">
+        <a class="btn btn-gold btn-lg" href="#formulas">Start practising ↓</a>
+        <a class="btn btn-glass btn-lg" href="https://www.youtube.com/playlist?list=PLbvk4Aqr_n70" target="_blank" rel="noopener">▶ Full playlist on YouTube</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>42</b><span>formulas</span></div>
+        <div class="stat"><b>4</b><span>datasets</span></div>
+        <div class="stat"><b>226</b><span>practice rows</span></div>
+        <div class="stat"><b>100%</b><span>free</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULA BROWSER -->
+  <section id="formulas" class="section">
+    <h2>1 · Pick a formula</h2>
+    <p class="section-sub">42 formulas, grouped the way the course teaches them. Click any card — its demo video
+    appears at the top of the practice area.</p>
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search a formula… e.g. XLOOKUP, SUMIFS, date" aria-label="Search formulas">
+      <div id="catChips" class="chips"></div>
+    </div>
+    <div id="formulaGrid" class="formula-grid"></div>
+  </section>
+
+  <!-- PRACTICE AREA : demo on top, then formula, then practice -->
+  <section id="practice" class="section">
+    <h2>2 · Watch, read, practise</h2>
+    <p class="section-sub">Select a formula above. Its demo video comes first, then the formula explained, then your turn.</p>
+
+    <div id="detail" class="detail glass">
+      <div class="detail-empty">
+        <p class="big">👆 Choose a formula to begin</p>
+        <p>Try <b>XLOOKUP</b> first — it is the most-used lookup in daily project work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATASETS -->
+  <section id="datasets" class="section">
+    <h2>3 · The datasets</h2>
+    <p class="section-sub">The same data as the course workbook — plus three more IT project datasets.
+    Every formula works on the dataset you pick here. Column letters are shown so you can write real Excel references
+    (A2, B2:B121 …). Header row is row 1, data starts at row 2.</p>
+    <div id="dsTabs" class="ds-tabs"></div>
+    <div class="upload-row glass">
+      <div>
+        <b>Use your own data</b>
+        <p>Upload a CSV file, or paste CSV text. First row must be the headers. Your file is read in your
+        browser only — nothing is uploaded anywhere.</p>
+      </div>
+      <div class="upload-actions">
+        <label class="btn btn-glass" for="csvFile">Upload CSV file</label>
+        <input id="csvFile" type="file" accept=".csv,text/csv" hidden>
+        <button id="pasteBtn" class="btn btn-outline" type="button">Paste CSV text</button>
+      </div>
+    </div>
+    <div id="pasteBox" class="paste-box glass" hidden>
+      <textarea id="pasteText" rows="5" placeholder="WorkID,Project,Owner&#10;IT-001,Customer Portal Revamp,Ayesha Khan&#10;IT-002,HRMS Upgrade,Usman Tariq"></textarea>
+      <div class="paste-actions">
+        <button id="pasteLoad" class="btn btn-gold" type="button">Load this data</button>
+        <button id="pasteCancel" class="btn btn-outline" type="button">Cancel</button>
+      </div>
+    </div>
+    <div class="table-wrap glass">
+      <div class="table-head">
+        <b id="dsTitle"></b><span id="dsMeta"></span>
+      </div>
+      <div class="table-scroll">
+        <table id="dataTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDES -->
+  <section id="slides" class="section">
+    <h2>4 · Slides &amp; files</h2>
+    <p class="section-sub">The full course deck, right here. Download the workbook, slides and guide from GitHub.</p>
+    <div class="slides-grid">
+      <div class="glass slide-view">
+        <h3>Detailed presentation — 48 slides</h3>
+        <iframe title="Course slides" src="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/dralihassankhan1990-spec/excel-for-IT-project-management/main/Operations_Analyst_IT_Excel_Detailed_PPT.pptx&embedded=true" loading="lazy"></iframe>
+        <p class="muted">If the viewer does not load, open it on GitHub instead →</p>
+      </div>
+      <div class="glass slide-links">
+        <h3>Get the files</h3>
+        <ul>
+          <li><a href="https://github.com/dralihassankhan1990-spec/excel-for-IT-project-management" target="_blank" rel="noopener">📁 GitHub repo — workbook, slides, guide &amp; all 42 demo videos</a></li>
+          <li><a href="https://www.youtube.com/playlist?list=PLbvk4Aqr_n70" target="_blank" rel="noopener">▶ YouTube playlist — all 42 demos (Unlisted)</a></li>
+          <li><a href="https://youtu.be/WET8JTS0GWM" target="_blank" rel="noopener">▶ Combined video — all 42 formulas in 25 minutes</a></li>
+          <li><a href="https://www.youtube.com/@SochAndSystems" target="_blank" rel="noopener">▶ Soch &amp; Systems on YouTube</a></li>
+        </ul>
+        <h3>How to practise</h3>
+        <ol class="howto">
+          <li>Pick a formula and watch its demo.</li>
+          <li>Read the syntax and the example.</li>
+          <li>Type the formula in the practice box — use the column letters from the table.</li>
+          <li>Press <b>Check answer</b>. Wrong? Read the error, then press <b>Show solution</b>.</li>
+          <li>Switch datasets and try the same formula again.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="glass">
+  <p><b>Excel Practice Lab</b> · Excel for IT Project Management · by <b>Muhammad Bilal</b> · Soch &amp; Systems</p>
+  <p class="muted">Thinking. Technology. Transformation. ·
+    <a href="https://www.youtube.com/@SochAndSystems" target="_blank" rel="noopener">YouTube</a> ·
+    <a href="https://github.com/dralihassankhan1990-spec/excel-for-IT-project-management" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="https://www.linkedin.com/in/bilal492/" target="_blank" rel="noopener">LinkedIn</a></p>
+  <p class="muted small">All data is fictional, for training only. This page runs entirely in your browser — no account, no server, no tracking.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
